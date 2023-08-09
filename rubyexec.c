@@ -34,7 +34,7 @@
 
 #define MAX_PATH_SIZE 1024
 
-const char *IMPLEMENTATIONS[] = {
+static const char *IMPLEMENTATIONS[] = {
 	"ruby18", "ruby19", "ruby20", "ruby21", "ruby22", "ruby23", "ruby24", "ruby25", "ruby26",
 	"ruby27", "ruby30", "ruby31", "ruby32", "jruby", "rbx", NULL
 };
