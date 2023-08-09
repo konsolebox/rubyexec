@@ -149,10 +149,10 @@ static char *find_usable_implementation(char *dir, const char **valid_implementa
 	die("No usable implementations found.\n");
 }
 
-static char **create_new_argv(int argc, char **argv)
+static char **create_new_argv(int argc, char **argv, const char *new_argv0)
 {
 	char **new_argv = do_malloc(argc);
-	new_argv[0] = argv[0];
+	new_argv[0] = strdup(new_argv0);
 
 	for (int i = 2; i < argc; ++i)
 		new_argv[i - 1] = argv[i];
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
 	char *selected_impl = basename(resolved_ruby);
 	char *usable_impl_path = in(valid_implementations, selected_impl) ? resolved_ruby :
 			find_usable_implementation(rubyexec_dir, valid_implementations);
-	execv(usable_impl_path, create_new_argv(argc, argv));
+	execv(usable_impl_path, create_new_argv(argc, argv, usable_impl_path));
 	die("%s failed to execute: %s\n", usable_impl_path, strerror(errno));
 	return 1;
 }
