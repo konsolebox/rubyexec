@@ -53,7 +53,7 @@ static void *do_malloc(size_t size)
 	void *p = malloc(size);
 
 	if (p == NULL)
-		die("Unable to allocate memory: %s\n", strerror(errno));\
+		die("Unable to allocate memory: %s\n", strerror(errno));
 
 	return p;
 }
