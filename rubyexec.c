@@ -43,6 +43,7 @@ static void die(const char *msg, ...)
 {
 	va_list ap;
 	va_start(ap, msg);
+	fprintf(stderr, "rubyexec: ");
 	vfprintf(stderr, msg, ap);
 	va_end(ap);
 	exit(EXIT_FAILURE);
@@ -163,12 +164,12 @@ static char **create_new_argv(int argc, char **argv)
 int main(int argc, char **argv)
 {
 	if (argc < 2) {
-		fprintf(stderr, "Invalid number of arguments.\n");
+		fprintf(stderr, "rubyexec: Invalid number of arguments.\n");
 		return 2;
 	}
 
 	if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
-		fprintf(stderr, "Usage: %s impl,... [args]\n", argv[0]);
+		fprintf(stderr, "rubyexec: Usage: %s impl,... [args]\n", argv[0]);
 		return 2;
 	}
 
