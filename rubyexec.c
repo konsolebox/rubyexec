@@ -179,7 +179,8 @@ int main(int argc, char **argv)
 	char *ruby = strconcat(rubyexec_dir, "/ruby", NULL);
 	char *resolved_ruby = resolve_path(ruby);
 	char *selected_impl = basename(resolved_ruby);
-	char *usable_impl_path = in(valid_implementations, selected_impl) ? resolved_ruby :
+	char *usable_impl_path = in(valid_implementations, selected_impl) ? (*resolved_ruby == '/' ?
+			resolved_ruby : strconcat(rubyexec_dir, "/", resolved_ruby, NULL)) :
 			find_usable_implementation(rubyexec_dir, valid_implementations);
 	execv(usable_impl_path, create_new_argv(argc, argv, usable_impl_path));
 	die("%s failed to execute: %s\n", usable_impl_path, strerror(errno));
