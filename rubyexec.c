@@ -93,8 +93,7 @@ static char *strconcat(const char *str1, ...)
 	p += strlen(str1);
 	va_start(ap, str1);
 
-	while ((str = va_arg(ap, const char *)) != NULL)
-	{
+	while ((str = va_arg(ap, const char *)) != NULL) {
 		strcpy(p, str);
 		p += strlen(str);
 	}
