@@ -152,6 +152,7 @@ static char *autopick_implementation(char *dir, const char **valid_implementatio
 	}
 
 	die("No usable implementations found.\n");
+	return NULL;
 }
 
 static char **create_new_argv(int argc, char **argv, const char *new_argv0)
