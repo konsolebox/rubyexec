@@ -139,11 +139,11 @@ static char *find_usable_implementation(char *dir, const char **valid_implementa
 {
 	for (const char **p = valid_implementations; *p != NULL; ++p) {
 		char *path = strconcat(dir, "/", *p, NULL);
-		bool exists = access(path, F_OK) == 0;
-		free(path);
 
-		if (exists)
+		if (access(path, F_OK) == 0)
 			return path;
+
+		free(path);
 	}
 
 	die("No usable implementations found.\n");
