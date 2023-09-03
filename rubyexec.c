@@ -39,6 +39,8 @@ static const char *IMPLEMENTATIONS[] = {
 	"ruby27", "ruby30", "ruby31", "ruby32", "jruby", "rbx", NULL
 };
 
+typedef struct { bool autopick; } options_t;
+
 static void die(const char *msg, ...)
 {
 	va_list ap;
@@ -114,14 +116,17 @@ static bool in(const char *null_terminated[], const char *str)
 	return false;
 }
 
-static const char **get_valid_implementations(char *comma_separated)
+static const char **get_valid_implementations_and_options(char *argv1, options_t *options)
 {
 	const char **valid_implementations = do_malloc(sizeof(IMPLEMENTATIONS));
 	const char **p = valid_implementations;
 	*p = NULL;
+	options->autopick = false;
 
-	for (char *str = strtok(comma_separated, ","); str != NULL; str = strtok(NULL, ",")) {
-		if (*valid_implementations == NULL || !in(valid_implementations, str)) {
+	for (char *str = strtok(argv1, ","); str != NULL; str = strtok(NULL, ",")) {
+		if (strcmp(str, "--autopick") == 0) {
+			options->autopick = true;
+		} else if (*valid_implementations == NULL || !in(valid_implementations, str)) {
 			if (in(IMPLEMENTATIONS, str)) {
 				*p = str;
 				*++p = NULL;
@@ -135,7 +140,7 @@ static const char **get_valid_implementations(char *comma_separated)
 	return valid_implementations;
 }
 
-static char *find_usable_implementation(char *dir, const char **valid_implementations)
+static char *autopick_implementation(char *dir, const char **valid_implementations)
 {
 	for (const char **p = valid_implementations; *p != NULL; ++p) {
 		char *path = strconcat(dir, "/", *p, NULL);
@@ -173,16 +178,25 @@ int main(int argc, char **argv)
 		return 2;
 	}
 
-	const char **valid_implementations = get_valid_implementations(argv[1]);
+	options_t options;
+	const char **valid_implementations = get_valid_implementations_and_options(argv[1], &options);
 	char *rubyexec = resolve_path("/proc/self/exe");
 	char *rubyexec_dir = dirname(rubyexec);
 	char *ruby = strconcat(rubyexec_dir, "/ruby", NULL);
 	char *resolved_ruby = resolve_path(ruby);
 	char *selected_impl = basename(resolved_ruby);
-	char *usable_impl_path = in(valid_implementations, selected_impl) ? (*resolved_ruby == '/' ?
-			resolved_ruby : strconcat(rubyexec_dir, "/", resolved_ruby, NULL)) :
-			find_usable_implementation(rubyexec_dir, valid_implementations);
-	execv(usable_impl_path, create_new_argv(argc, argv, usable_impl_path));
-	die("%s failed to execute: %s\n", usable_impl_path, strerror(errno));
+	char *impl_path;
+
+	if (in(valid_implementations, selected_impl)) {
+		impl_path = *resolved_ruby == '/' ? resolved_ruby :
+				strconcat(rubyexec_dir, "/", resolved_ruby, NULL);
+	} else if (options.autopick) {
+		impl_path = autopick_implementation(rubyexec_dir, valid_implementations);
+	} else {
+		die("Script does not support currently selected Ruby implementation.\n");
+	}
+
+	execv(impl_path, create_new_argv(argc, argv, impl_path));
+	die("%s failed to execute: %s\n", impl_path, strerror(errno));
 	return 1;
 }
