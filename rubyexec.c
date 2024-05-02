@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023 konsolebox
+ * Copyright © 2024 konsolebox
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files
@@ -36,7 +36,7 @@
 
 static const char *IMPLEMENTATIONS[] = {
 	"ruby18", "ruby19", "ruby20", "ruby21", "ruby22", "ruby23", "ruby24", "ruby25", "ruby26",
-	"ruby27", "ruby30", "ruby31", "ruby32", "jruby", "rbx", NULL
+	"ruby27", "ruby30", "ruby31", "ruby32", "ruby33", "jruby", "rbx", NULL
 };
 
 typedef struct { bool autopick; } options_t;
