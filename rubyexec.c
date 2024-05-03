@@ -123,7 +123,7 @@ static const char **get_valid_implementations_and_options(char *argv1, options_t
 	options->autopick = false;
 
 	for (char *str = strtok(argv1, ","); str != NULL; str = strtok(NULL, ",")) {
-		if (strcmp(str, "--autopick") == 0) {
+		if (strcmp(str, "-a") == 0 || strcmp(str, "--autopick") == 0) {
 			options->autopick = true;
 		} else if (*valid_implementations == NULL || !in(valid_implementations, str)) {
 			if (in(IMPLEMENTATIONS, str)) {
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
 	}
 
 	if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
-		fprintf(stderr, "rubyexec: Usage: %s impl,... [args]\n", argv[0]);
+		fprintf(stderr, "rubyexec: Usage: %s [-a,|--autopick,]impl,... [args]\n", argv[0]);
 		return 2;
 	}
 
