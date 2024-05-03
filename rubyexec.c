@@ -87,7 +87,7 @@ static char *strconcat(const char *str1, ...)
 		total_length += strlen(str);
 
 	va_end(ap);
-	char *buf = do_malloc(total_length + sizeof('\0'));
+	char *buf = do_malloc(total_length + 1);
 	char *p = buf;
 	strcpy(p, str1);
 	p += strlen(str1);
