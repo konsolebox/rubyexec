@@ -193,7 +193,7 @@ int main(int argc, char **argv)
 	} else if (options.autopick) {
 		impl_path = autopick_implementation(rubyexec_dir, valid_implementations);
 	} else {
-		die("Script does not support currently selected Ruby implementation.\n");
+		die("Selected Ruby implementation not wanted.\n");
 	}
 
 	execv(impl_path, create_new_argv(argc, argv, impl_path));
