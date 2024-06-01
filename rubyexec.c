@@ -156,12 +156,12 @@ static char *autopick_implementation(char *dir, const char **valid_implementatio
 
 static char **create_new_argv(int argc, char **argv, const char *new_argv0)
 {
-	char **new_argv = do_malloc(argc);
-	new_argv[0] = strdup(new_argv0);
+	char **new_argv = do_malloc(argc * sizeof(*new_argv));
 
 	for (int i = 2; i < argc; ++i)
 		new_argv[i - 1] = argv[i];
 
+	new_argv[0] = strndup(new_argv0, MAX_PATH_SIZE);
 	new_argv[argc - 1] = NULL;
 	return new_argv;
 }
